@@ -1,0 +1,31 @@
+/* Контейнер застосунку */
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  background-color: #f8f9fa;
+}
+
+/* Верхня панель з пошуком і кнопкою */
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+/* Кнопка створення нотатки */
+.button {
+  padding: 10px 20px;
+  background-color: #0d6efd;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.button:hover {
+  background-color: #0b5ed7;
+}
