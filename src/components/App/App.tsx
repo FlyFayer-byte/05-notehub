@@ -13,12 +13,15 @@ export default function App() {
   // Стан модалки
   const [isOpen, setIsOpen] = useState(false);
 
-  // Стан пошуку
+  // Стан пошукового запиту
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Пагінація
+  // Стан пагінації
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+
+  // Скільки нотаток отримано (для контролю рендера NoteList)
+  const [noteCount, setNoteCount] = useState(0);
 
   // Затримка вводу перед запитом
   const [debouncedSearch] = useDebounce(searchQuery, 500);
@@ -39,14 +42,25 @@ export default function App() {
         </button>
       </header>
 
-      <NoteList
-        search={debouncedSearch}
-        page={page}
-        onTotalPagesChange={setTotalPages}
-      />
+      {/* 👉 Показуємо NoteList лише якщо є нотатки */}
+        <NoteList
+          search={debouncedSearch}
+          page={page}
+          onTotalPagesChange={setTotalPages}
+          onCountChange={setNoteCount}
+        />
+      
 
-      <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
+      {/* 👉 Показуємо Pagination лише якщо сторінок більше однієї */}
+      {totalPages > 1 && (
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          onPageChange={setPage}
+        />
+      )}
 
+      {/* 👉 Модалка */}
       {isOpen && (
         <Modal onClose={() => setIsOpen(false)}>
           <NoteForm

@@ -9,14 +9,25 @@ interface ModalProps {
 
 export default function Modal({ children, onClose }: ModalProps) {
   // Закриття по Escape
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
+ useEffect(() => {
+   const handleKeyDown = (e: KeyboardEvent) => {
+     if (e.key === 'Escape') onClose();
+   };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose]);
+   // Блокуємо скрол під модальним вікном
+   const prevOverflow = document.body.style.overflow;
+   document.body.style.overflow = 'hidden';
+
+   window.addEventListener('keydown', handleKeyDown);
+
+   return () => {
+     window.removeEventListener('keydown', handleKeyDown);
+
+     // Повертаємо попередню поведінку сторінки
+     document.body.style.overflow = prevOverflow;
+   };
+ }, [onClose]);
+
 
   // Закриття при кліку по backdrop
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {

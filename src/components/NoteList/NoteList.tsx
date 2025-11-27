@@ -17,23 +17,23 @@ interface NoteListProps {
   search: string;
   page: number;
   onTotalPagesChange: React.Dispatch<React.SetStateAction<number>>;
+  onCountChange: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export default function NoteList({
   search,
   page,
   onTotalPagesChange,
+  onCountChange,
 }: NoteListProps) {
   const queryClient = useQueryClient();
 
-  // Отримання списку нотаток з бекенду
   const { data, isLoading, isError } = useQuery<FetchNotesResponse>({
     queryKey: ['notes', page, search],
     queryFn: () => fetchNotes({ page, perPage: 12, search }),
     placeholderData: prev => prev,
   });
 
-  // Видалення нотатки
   const mutation = useMutation({
     mutationFn: deleteNote,
     onSuccess: () => {
@@ -45,18 +45,17 @@ export default function NoteList({
 
   const handleDelete = (id: string) => mutation.mutate(id);
 
-  // Оновлення totalPages у батьківському компоненті
+  // 🆕 Додаємо ефект, щоб оновлювати кількість нотаток
   useEffect(() => {
-    if (!data) return;
+    if (data) {
+      onCountChange(data.notes.length);
+      onTotalPagesChange(data.totalPages);
+    }
+  }, [data, onCountChange, onTotalPagesChange]);
 
-    onTotalPagesChange(prev =>
-      prev !== data.totalPages ? data.totalPages : prev
-    );
-  }, [data, onTotalPagesChange]);
-
-  // UI стани
   if (isLoading && !data) return <Loader />;
   if (isError) return <ErrorMessage message="❌ Failed to load notes" />;
+
   if (!data || data.notes.length === 0)
     return <p>No notes found for "{search}"</p>;
 
