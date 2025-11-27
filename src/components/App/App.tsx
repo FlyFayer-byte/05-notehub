@@ -21,7 +21,7 @@ export default function App() {
   const [totalPages, setTotalPages] = useState(1);
 
   // Скільки нотаток отримано (для контролю рендера NoteList)
-  const [noteCount, setNoteCount] = useState(0);
+  // const [noteCount, setNoteCount] = useState(0);
 
   // Затримка вводу перед запитом
   const [debouncedSearch] = useDebounce(searchQuery, 500);
@@ -42,7 +42,7 @@ export default function App() {
         </button>
       </header>
 
-      {/* 👉 Показуємо NoteList лише якщо є нотатки */}
+      {/* Показуємо NoteList лише якщо є нотатки */}
         <NoteList
           search={debouncedSearch}
           page={page}
@@ -51,7 +51,7 @@ export default function App() {
         />
       
 
-      {/* 👉 Показуємо Pagination лише якщо сторінок більше однієї */}
+      {/* Показуємо Pagination лише якщо сторінок більше однієї */}
       {totalPages > 1 && (
         <Pagination
           page={page}
@@ -60,7 +60,7 @@ export default function App() {
         />
       )}
 
-      {/* 👉 Модалка */}
+      {/* Модалка */}
       {isOpen && (
         <Modal onClose={() => setIsOpen(false)}>
           <NoteForm
