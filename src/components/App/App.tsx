@@ -21,7 +21,7 @@ export default function App() {
   const [totalPages, setTotalPages] = useState(1);
 
   // Скільки нотаток отримано (для контролю рендера NoteList)
-  // const [noteCount, setNoteCount] = useState(0);
+  const [, setNoteCount] = useState(0);
 
   // Затримка вводу перед запитом
   const [debouncedSearch] = useDebounce(searchQuery, 500);
