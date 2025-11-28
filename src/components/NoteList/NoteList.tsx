@@ -6,6 +6,15 @@ interface NoteListProps {
   onDelete: (id: string) => void;
 }
 
+/* 
+interface NoteListProps {
+  search: string;
+  page: number;
+  onTotalPagesChange: React.Dispatch<React.SetStateAction<number>>;
+  onCountChange: React.Dispatch<React.SetStateAction<number>>;
+}
+*/
+
 export default function NoteList({ notes, onDelete }: NoteListProps) {
   if (notes.length === 0) return <p>No notes found</p>;
 
@@ -18,6 +27,7 @@ export default function NoteList({ notes, onDelete }: NoteListProps) {
 
           <div className={css.footer}>
             <span className={css.tag}>{note.tag}</span>
+
             <button className={css.button} onClick={() => onDelete(note.id)}>
               Delete
             </button>

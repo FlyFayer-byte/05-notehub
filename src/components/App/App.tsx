@@ -67,7 +67,7 @@ export default function App() {
 
       {isLoading && <p>Loading...</p>}
       {!isLoading && notes.length > 0 && (
-        <NoteList notes={notes} onDelete={id => deleteMutation.mutate(id)} />
+        <NoteList notes={notes} onDelete={(id: string) => deleteMutation.mutate(id)} />
       )}
 
       {!isLoading && !notes.length && <p>No notes found</p>}
