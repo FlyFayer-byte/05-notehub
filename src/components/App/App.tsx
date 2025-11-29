@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { useDebounce } from 'use-debounce';
 import {
   useQuery,
-  useMutation,
+  // useMutation,
   useQueryClient,
   keepPreviousData,
 } from '@tanstack/react-query';
-import toast, { Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 
 import NoteList from '../NoteList/NoteList';
 import SearchBox from '../SearchBox/SearchBox';
@@ -14,7 +14,7 @@ import Pagination from '../Pagination/Pagination';
 import Modal from '../Modal/Modal';
 import NoteForm from '../NoteForm/NoteForm';
 
-import { fetchNotes, deleteNote } from '../../services/noteService';
+import { fetchNotes } from '../../services/noteService';
 import type { FetchNotesResponse } from '../../services/noteService';
 
 import css from './App.module.css';
@@ -33,14 +33,14 @@ export default function App() {
     placeholderData: keepPreviousData,
   });
 
-  const deleteMutation = useMutation({
-    mutationFn: deleteNote,
-    onSuccess: () => {
-      toast.success('Note deleted');
-      queryClient.invalidateQueries({ queryKey: ['notes'] });
-    },
-    onError: () => toast.error('Failed to delete note'),
-  });
+  // const deleteMutation = useMutation({
+  //   mutationFn: deleteNote,
+  //   onSuccess: () => {
+  //     toast.success('Note deleted');
+  //     queryClient.invalidateQueries({ queryKey: ['notes'] });
+  //   },
+  //   onError: () => toast.error('Failed to delete note'),
+  // });
 
   const notes = data?.notes ?? [];
   const totalPages = data?.totalPages ?? 0;
@@ -67,7 +67,7 @@ export default function App() {
 
       {isLoading && <p>Loading...</p>}
       {!isLoading && notes.length > 0 && (
-        <NoteList notes={notes} onDelete={(id: string) => deleteMutation.mutate(id)} />
+        <NoteList notes={notes} />
       )}
 
       {!isLoading && !notes.length && <p>No notes found</p>}
