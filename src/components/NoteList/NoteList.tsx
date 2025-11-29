@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
 
 import type { Note } from '../../types/note';
@@ -8,27 +9,29 @@ import css from './NoteList.module.css';
 
 interface NoteListProps {
   notes: Note[];
- }
+}
 
 export default function NoteList({ notes }: NoteListProps) {
   const queryClient = useQueryClient();
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  // Мутація для видалення нотатки
-  const { mutate, isPending } = useMutation({
+  const mutation = useMutation({
     mutationFn: deleteNote,
     onSuccess: () => {
       toast.success('Note deleted');
-      // Інвалідація кешу після успішного видалення
       queryClient.invalidateQueries({ queryKey: ['notes'] });
+      setDeletingId(null);
     },
     onError: () => {
       toast.error('Failed to delete note');
+      setDeletingId(null);
     },
   });
 
-const handleDelete = (id: string) => {
-  mutate(id);
-};
+  const handleDelete = (id: string) => {
+    setDeletingId(id);
+    mutation.mutate(id);
+  };
 
   if (notes.length === 0) return <p>No notes found</p>;
 
@@ -45,9 +48,11 @@ const handleDelete = (id: string) => {
             <button
               className={css.button}
               onClick={() => handleDelete(note.id)}
-              disabled={isPending}
-            >Delete
-              {/* {isPending ? 'Deleting...' : 'Delete'} */}
+              disabled={mutation.isPending && deletingId === note.id}
+            >
+              {mutation.isPending && deletingId === note.id
+                ? 'Deleting...'
+                : 'Delete'}
             </button>
           </div>
         </li>
